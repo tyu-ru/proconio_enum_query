@@ -1,23 +1,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::Literal;
 use quote::quote;
-#[allow(unused_imports)]
-use syn::{
-    parse_macro_input, punctuated::Punctuated, token::Comma, Data, DeriveInput, Fields,
-    FieldsUnnamed, Ident, Item, Type, Variant,
-};
-
-macro_rules! unwrap_or_compile_error {
-    ($option:expr, $tokens:expr,$msg:expr) => {
-        if let Some(data) = $option {
-            data
-        } else {
-            return syn::Error::new_spanned($tokens, $msg)
-                .to_compile_error()
-                .into();
-        }
-    };
-}
+use syn::{parse_macro_input, Fields, Item, Type};
 
 #[proc_macro_attribute]
 pub fn derive_query(_args: TokenStream, input: TokenStream) -> TokenStream {
@@ -36,35 +20,56 @@ pub fn derive_query(_args: TokenStream, input: TokenStream) -> TokenStream {
 
     let mut out = item.clone();
     for v in &mut out.variants {
-        if let Fields::Unnamed(FieldsUnnamed { unnamed, .. }) = &mut v.fields {
-            for field in unnamed {
-                let ty = &field.ty;
-                let ident = quote! { <#ty as proconio::source::Readable>::Output };
-                field.ty = Type::Verbatim(ident.into());
+        match &mut v.fields {
+            Fields::Unnamed(unnamed) => {
+                for field in &mut unnamed.unnamed {
+                    let ty = &field.ty;
+                    let ident = quote! { <#ty as proconio::source::Readable>::Output };
+                    field.ty = Type::Verbatim(ident.into());
+                }
             }
-        }
+            Fields::Named(named) => {
+                for field in &mut named.named {
+                    let ty = &field.ty;
+                    let ident = quote! { <#ty as proconio::source::Readable>::Output };
+                    field.ty = Type::Verbatim(ident.into());
+                }
+            }
+            Fields::Unit => {}
+        };
     }
 
     let enum_name = &item.ident;
 
     let matcher = item.variants.iter().enumerate().map(|(i, v)| {
-        let i = Literal::usize_unsuffixed(i);
         let ident = &v.ident;
-        let fields =
-            &unwrap_or_compile_error!(extract_fields_unnamed(&v.fields), &v.fields, "???").unnamed;
-        let len = fields.len();
-        let fields = if len == 1 {
-            quote! { #fields }
-        } else {
-            quote! { (#fields) }
+        let stmt = match &v.fields {
+            Fields::Unnamed(unnamed) => {
+                let fields = &unnamed.unnamed;
+                let len = fields.len();
+                let input_fields = if len == 1 {
+                    quote! { (#fields,) }
+                } else {
+                    quote! { (#fields) }
+                };
+                let i = (0..len).map(|i| Literal::usize_unsuffixed(i));
+                let output_fields= quote! { #(temp.#i),* };
+                quote! { proconio::input!{ from source, temp: #input_fields } #enum_name::#ident(#output_fields) }
+            }
+            Fields::Named(named) => {
+                let fields = &named.named;
+                let (temp_input, temp_output):(Vec<_>,Vec<_>) = fields.iter().map(|f|{
+                    let (ident, ty) = (f.ident.as_ref().expect("parse error?"), &f.ty);
+                    (quote!{ #ident:#ty }, quote!{ #ident })
+                }).unzip();
+                quote! { proconio::input! { from source, #(#temp_input),*} #enum_name::#ident{ #(#temp_output),* } }
+            }
+            Fields::Unit => {
+                quote! { #enum_name::#ident }
+            }
         };
-        let fields2 = if len == 1 {
-            quote! { x }
-        } else {
-            let i = (0..len).map(|i| Literal::usize_unsuffixed(i));
-            quote! { #(x.#i),* }
-        };
-        quote! { #i => { proconio::input!{ from source, x: #fields } #enum_name::#ident(#fields2) }}
+        let i = Literal::usize_unsuffixed(i);
+        quote! { #i => { #stmt }}
     });
 
     let gen = quote! {
@@ -82,12 +87,4 @@ pub fn derive_query(_args: TokenStream, input: TokenStream) -> TokenStream {
         }
     };
     gen.into()
-}
-
-fn extract_fields_unnamed(fields: &Fields) -> Option<&FieldsUnnamed> {
-    if let Fields::Unnamed(ref unnamed) = fields {
-        Some(unnamed)
-    } else {
-        None
-    }
 }
