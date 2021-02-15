@@ -26,6 +26,12 @@ pub fn derive_query(
 
     let enum_ident = &item.ident;
 
+    if !item.generics.params.is_empty() {
+        return syn::Error::new_spanned(item.generics, "generic enum not supported.")
+            .to_compile_error()
+            .into();
+    }
+
     let matcher = item.variants.iter().enumerate().map(|(i, v)| {
         let variant_ident = &v.ident;
         let stmt = match &v.fields {
