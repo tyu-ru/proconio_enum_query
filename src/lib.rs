@@ -1,9 +1,10 @@
 use proc_macro::TokenStream;
 use proc_macro2::Literal;
 use quote::quote;
+#[allow(unused_imports)]
 use syn::{
     parse_macro_input, punctuated::Punctuated, token::Comma, Data, DeriveInput, Fields,
-    FieldsUnnamed, Variant,
+    FieldsUnnamed, Ident, Item, Type, Variant,
 };
 
 macro_rules! unwrap_or_compile_error {
@@ -18,24 +19,39 @@ macro_rules! unwrap_or_compile_error {
     };
 }
 
-#[proc_macro_derive(derive_query)]
-pub fn derive(input: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(input as DeriveInput);
+#[proc_macro_attribute]
+pub fn derive_query(_args: TokenStream, input: TokenStream) -> TokenStream {
+    let item = if let Item::Enum(x) = parse_macro_input!(input as Item) {
+        x
+    } else {
+        return syn::Error::new(
+            proc_macro2::Span::call_site(),
+            "expected enum or match expression",
+        )
+        .to_compile_error()
+        .into();
+    };
 
     // eprintln!("{:#?}", item);
 
-    let enum_name = &item.ident;
-    let variants = unwrap_or_compile_error!(
-        extract_enum_variants(&item),
-        item,
-        "derive_query can only derive from enum."
-    );
+    let mut out = item.clone();
+    for v in &mut out.variants {
+        if let Fields::Unnamed(FieldsUnnamed { unnamed, .. }) = &mut v.fields {
+            for field in unnamed {
+                let ty = &field.ty;
+                let ident = quote! { <#ty as proconio::source::Readable>::Output };
+                field.ty = Type::Verbatim(ident.into());
+            }
+        }
+    }
 
-    let matcher = variants.iter().enumerate().map(|(i, v)| {
+    let enum_name = &item.ident;
+
+    let matcher = item.variants.iter().enumerate().map(|(i, v)| {
         let i = Literal::usize_unsuffixed(i);
         let ident = &v.ident;
         let fields =
-            &unwrap_or_compile_error!(extract_fields_unnamed(&v.fields), &v.fields, "fxxx").unnamed;
+            &unwrap_or_compile_error!(extract_fields_unnamed(&v.fields), &v.fields, "???").unnamed;
         let len = fields.len();
         let fields = if len == 1 {
             quote! { #fields }
@@ -52,6 +68,8 @@ pub fn derive(input: TokenStream) -> TokenStream {
     });
 
     let gen = quote! {
+        #out
+
         impl proconio::source::Readable for #enum_name {
             type Output = Self;
             fn read<R: std::io::BufRead, S: proconio::source::Source<R>>(source: &mut S) -> Self::Output {
@@ -64,14 +82,6 @@ pub fn derive(input: TokenStream) -> TokenStream {
         }
     };
     gen.into()
-}
-
-fn extract_enum_variants(item: &DeriveInput) -> Option<&Punctuated<Variant, Comma>> {
-    if let Data::Enum(ref data_enum) = item.data {
-        Some(&data_enum.variants)
-    } else {
-        None
-    }
 }
 
 fn extract_fields_unnamed(fields: &Fields) -> Option<&FieldsUnnamed> {

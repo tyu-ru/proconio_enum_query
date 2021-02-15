@@ -1,14 +1,15 @@
-error: derive_query can only derive from enum.
- --> $DIR/02-not_enum.rs:2:1
+error: expected enum or match expression
+ --> $DIR/02-not_enum.rs:1:1
   |
-2 | / struct Query1 {
-3 | |     a: i64,
-4 | |     b: char,
-5 | | }
-  | |_^
+1 | #[proconio_enum_query::derive_query]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error: derive_query can only derive from enum.
- --> $DIR/02-not_enum.rs:7:1
+error: expected enum or match expression
+ --> $DIR/02-not_enum.rs:6:1
   |
-7 | struct Query2(i64, char);
-  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+6 | #[proconio_enum_query::derive_query]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)

@@ -1,5 +1,6 @@
 #[allow(dead_code)]
-#[derive(PartialEq, Debug, proconio_enum_query::derive_query)]
+#[proconio_enum_query::derive_query]
+#[derive(PartialEq, Debug)]
 enum Query {
     A(i64),
     B(char),
