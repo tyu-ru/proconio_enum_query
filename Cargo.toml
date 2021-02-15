@@ -12,5 +12,5 @@ proc-macro = true
 [dev-dependencies]
 trybuild = { version = "1.0.41", features = ["diff"] }
 
-
 [dependencies]
+syn = { version = "1.0.60", features = ["full", "extra-traits"] }
