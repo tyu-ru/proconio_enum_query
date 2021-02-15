@@ -1,14 +1,14 @@
 error: derive_query can only derive from enum.
- --> $DIR/02-not_enum.rs:4:1
+ --> $DIR/02-not_enum.rs:2:1
   |
-4 | / struct Query1 {
-5 | |     a: i64,
-6 | |     b: char,
-7 | | }
+2 | / struct Query1 {
+3 | |     a: i64,
+4 | |     b: char,
+5 | | }
   | |_^
 
 error: derive_query can only derive from enum.
- --> $DIR/02-not_enum.rs:9:1
+ --> $DIR/02-not_enum.rs:7:1
   |
-9 | struct Query2(i64, char);
+7 | struct Query2(i64, char);
   | ^^^^^^^^^^^^^^^^^^^^^^^^^

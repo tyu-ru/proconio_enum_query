@@ -1,6 +1,25 @@
+use proconio::{input, source::auto::AutoSource};
+#[derive(proconio_enum_query::derive_query)]
+enum Query {
+    A(i64),
+}
+
 #[test]
-fn tests() {
-    let t = trybuild::TestCases::new();
-    t.pass("tests/testcases/01-can_build.rs");
-    t.compile_fail("tests/testcases/02-not_enum.rs");
+#[should_panic(expected = "unknown query type '2'")]
+fn test_unknown_query_type() {
+    let source = AutoSource::from("2 23");
+    input! {
+        from source,
+        _q: Query,
+    }
+}
+
+#[test]
+#[should_panic(expected = "query number parse error: ParseIntError { kind: InvalidDigit }")]
+fn test_unknown_query_type2() {
+    let source = AutoSource::from("hoge 23");
+    input! {
+        from source,
+        _q: Query,
+    }
 }
