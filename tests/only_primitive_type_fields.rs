@@ -3,11 +3,12 @@
 enum Query {
     A(i64),
     B(char),
-    C(i64, char), // multiple variants
+    C(i64, char),
     D { x: i64, y: char },
 }
 
-fn main() {
+#[test]
+fn test() {
     let source = proconio::source::auto::AutoSource::from(
         r#"1 12
            2 P

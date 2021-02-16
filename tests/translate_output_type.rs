@@ -17,7 +17,8 @@ enum Query {
     D { x: Twice, y: Twice },
 }
 
-fn main() {
+#[test]
+fn test() {
     let source = proconio::source::auto::AutoSource::from(
         r#"1 12
            2 34 ABC

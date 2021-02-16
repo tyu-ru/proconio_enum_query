@@ -6,7 +6,8 @@ enum Query {
     C(i64, char),
 }
 
-fn main() {
+#[test]
+fn test() {
     let source = proconio::source::auto::AutoSource::from(
         r#"1 12
            2
