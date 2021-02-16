@@ -1,5 +1,5 @@
 use proconio::{input, source::auto::AutoSource};
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query::proconio_enum_query]
 enum Query {
     A(i64),
 }

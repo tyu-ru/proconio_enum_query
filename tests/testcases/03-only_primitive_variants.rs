@@ -1,4 +1,4 @@
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query::proconio_enum_query]
 #[derive(PartialEq, Debug)]
 enum Query {
     A(i64),

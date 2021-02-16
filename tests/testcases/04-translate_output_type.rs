@@ -8,7 +8,7 @@ impl proconio::source::Readable for Twice {
     }
 }
 
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query::proconio_enum_query]
 #[derive(PartialEq, Debug)]
 enum Query {
     A(proconio::marker::Usize1),

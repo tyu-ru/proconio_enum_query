@@ -1,4 +1,4 @@
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query::proconio_enum_query]
 #[allow(dead_code)]
 #[derive(PartialEq, Debug)]
 enum Query<T> {

@@ -1,6 +1,9 @@
 use proconio::{input, marker::*, source::auto::AutoSource};
 
-#[proconio_enum_query::derive_query]
+#[macro_use]
+extern crate proconio_enum_query as _;
+
+#[proconio_enum_query]
 #[derive(PartialEq, Debug)]
 enum Query {
     A(Usize1),

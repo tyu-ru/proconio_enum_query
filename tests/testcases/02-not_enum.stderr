@@ -1,15 +1,11 @@
 error: expected enum or match expression
  --> $DIR/02-not_enum.rs:1:1
   |
-1 | #[proconio_enum_query::derive_query]
-  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |
-  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
+1 | #[proconio_enum_query::proconio_enum_query]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: expected enum or match expression
  --> $DIR/02-not_enum.rs:6:1
   |
-6 | #[proconio_enum_query::derive_query]
-  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  |
-  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
+6 | #[proconio_enum_query::proconio_enum_query]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

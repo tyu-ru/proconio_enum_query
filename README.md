@@ -3,7 +3,10 @@
 [proconio](https://crates.io/crates/proconio)で列挙型を受け取れるようにするattributeを追加するクレートです
 
 ```rust
-#[proconio_enum_query::derive_query]
+#[macro_use]
+extern crate proconio_enum_query as _;
+
+#[proconio_enum_query]
 enum Query {
     A(i64),
     B(char),
@@ -17,16 +20,20 @@ proconio::input! {
 }
 ```
 
+[`cargo-equip`](https://github.com/qryxip/cargo-equip)による展開にも対応しています
+
+参考: [競技プログラミングにprocedural macroを持ち込む](https://qiita.com/qryxip/items/1b4716b1357c89adeaae)
+
 ## 機能
 
-列挙型に`#[proconio_enum_query::derive_query]`を付与することで`proconio::source::Readable`が実装されます
+列挙型に`#[proconio_enum_query::proconio_enum_query]`を付与することで`proconio::source::Readable`が実装されます
 
 入力の先頭の番号が列挙型のバリアントの宣言順に対応します。これは1-indexedです
 
 各バリアントのフィールド内の型は`proconio::source::Readable`を実装している必要があります。列挙型は内部の各型を`<T as Readable>::Output`に置き換えたものに変更されます。(例えば`Usize1`は`usize`に置き換わります。`input!`の際は`Usize1`として扱われます。)
 
 ```rust
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query]
 enum Query {
     A(i64),        // クエリ番号1
     B(Usize1),     // クエリ番号2
@@ -75,7 +82,7 @@ for _ in 0..q {
 ### After
 
 ```rust
-#[proconio_enum_query::derive_query]
+#[proconio_enum_query]
 enum Query {
     A(Usize1),
     B(char),
