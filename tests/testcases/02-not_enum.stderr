@@ -1,11 +1,11 @@
-error: expected enum or match expression
- --> $DIR/02-not_enum.rs:1:1
+error: expected `enum`
+ --> $DIR/02-not_enum.rs:2:1
   |
-1 | #[proconio_enum_query::proconio_enum_query]
-  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2 | struct Query1 {
+  | ^^^^^^
 
-error: expected enum or match expression
- --> $DIR/02-not_enum.rs:6:1
+error: expected `enum`
+ --> $DIR/02-not_enum.rs:7:1
   |
-6 | #[proconio_enum_query::proconio_enum_query]
-  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 | struct Query2(i64, char);
+  | ^^^^^^

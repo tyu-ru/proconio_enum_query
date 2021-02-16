@@ -3,29 +3,25 @@ use quote::quote;
 use syn::{Fields, FieldsNamed, FieldsUnnamed, Ident, ItemEnum, Type};
 
 #[no_mangle]
-pub extern "C" fn proconio_enum_query(_args: TokenStream, input: TokenStream) -> TokenStream {
-    let item = if let Ok(x) = syn::parse2::<ItemEnum>(input) {
-        x
-    } else {
-        return syn::Error::new(
-            proc_macro2::Span::call_site(),
-            "expected enum or match expression",
-        )
-        .to_compile_error()
-        .into();
-    };
+pub extern "C" fn proconio_enum_query(args: TokenStream, input: TokenStream) -> TokenStream {
+    run(args, input).unwrap_or_else(|e| e.to_compile_error())
+}
 
-    let mut out = item.clone();
-    for v in &mut out.variants {
+fn run(_args: TokenStream, input: TokenStream) -> syn::Result<TokenStream> {
+    let item = syn::parse2::<ItemEnum>(input)?;
+
+    let mut output_enum = item.clone();
+    for v in &mut output_enum.variants {
         type_convert_to_readable_output(&mut v.fields);
     }
 
     let enum_ident = &item.ident;
 
     if !item.generics.params.is_empty() {
-        return syn::Error::new_spanned(item.generics, "generic enum not supported.")
-            .to_compile_error()
-            .into();
+        return Err(syn::Error::new_spanned(
+            item.generics,
+            "generic enum not supported.",
+        ));
     }
 
     let matcher = item.variants.iter().enumerate().map(|(i, v)| {
@@ -40,7 +36,7 @@ pub extern "C" fn proconio_enum_query(_args: TokenStream, input: TokenStream) ->
     });
 
     let gen = quote! {
-        #out
+        #output_enum
 
         impl proconio::source::Readable for #enum_ident {
             type Output = Self;
@@ -53,7 +49,7 @@ pub extern "C" fn proconio_enum_query(_args: TokenStream, input: TokenStream) ->
             }
         }
     };
-    gen.into()
+    Ok(gen.into())
 }
 
 fn type_convert_to_readable_output(fields: &mut Fields) {
