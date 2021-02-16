@@ -2,6 +2,8 @@
 
 [proconio](https://crates.io/crates/proconio)で列挙型を受け取れるようにするattributeを追加するクレートです
 
+現在、**ジェネリック列挙型**や**Vecの入力**には**対応してない**ので注意です
+
 ```rust
 #[macro_use]
 extern crate proconio_enum_query as _;
@@ -24,13 +26,21 @@ proconio::input! {
 
 参考: [競技プログラミングにprocedural macroを持ち込む](https://qiita.com/qryxip/items/1b4716b1357c89adeaae)
 
-## 機能
+## Description
 
 列挙型に`#[proconio_enum_query::proconio_enum_query]`を付与することで`proconio::source::Readable`が実装されます
 
-入力の先頭の番号が列挙型のバリアントの宣言順に対応します。これは1-indexedです
+`#[proconio_enum_query]`が付与された列挙型が`input!`で入力されるときは次の順で処理されます。
 
-各バリアントのフィールド内の型は`proconio::source::Readable`を実装している必要があります。列挙型は内部の各型を`<T as Readable>::Output`に置き換えたものに変更されます。(例えば`Usize1`は`usize`に置き換わります。`input!`の際は`Usize1`として扱われます。)
+1. クエリの種類を示す番号として入力の先頭の整数1つが処理される
+1. クエリ番号が列挙型のヴァリアントの宣言順に対応して、どのヴァリアントとして入力されるか決定される(**1-indexed**)
+1. 選択されたヴァリアントが入力処理される
+
+ヴァリアントの種類はユニット型、タプル型、構造体型に対応しています。
+
+各ヴァリアントのフィールド内の型は`proconio::source::Readable`を実装している必要があります。
+列挙型は内部の各型を`<T as Readable>::Output`に置き換えたものに変更されます。
+([proconio_derive::derive_readable](https://docs.rs/proconio-derive/0.2.1/proconio_derive/attr.derive_readable.html)と同様の挙動です。例えば`Usize1`は`usize`に置き換わります。`input!`の際は`Usize1`として扱われます。)
 
 ```rust
 #[proconio_enum_query]
@@ -96,11 +106,20 @@ input! {
 }
 ```
 
-## 実装されていない機能
+## TODO
 
 - 0-indexedなクエリ番号への対応及びクエリ番号の指定
-- **ジェネリック列挙型の対応**
+- ジェネリック列挙型の対応
 - Vecを含むクエリ
+
+## Requirement
+
+- Python3.9
+  - ビルドスクリプト内部で呼び出しています
+
+## Note
+
+`cargo-equip`による展開に対応するためのソースコードは<https://github.com/qryxip/competitive-programming-library>の`proc-macros/fastout`の当該部分を一部改変したものを使用しています
 
 ## Author
 
@@ -108,4 +127,4 @@ tyu-ru <tyuru.tw.cpp@gmail.com>
 
 ## License
 
-TODO
+Licensed under the [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/deed).
