@@ -3,7 +3,23 @@ name = "proconio_enum_query"
 version = "0.1.0"
 authors = ["tyu-ru <tyuru.tw.cpp@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/tyu-ru/proconio_enum_query"
+license = "CC0-1.0"
+publish = false
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package.metadata.cargo-equip.watt.proc-macro-attribute]
+proconio_enum_query = { path = "$OUT_DIR/proconio_enum_query_impl.wasm", function = "proconio_enum_query" }
+
+[lib]
+name = "proconio_enum_query"
+proc-macro = true
 
 [dependencies]
+watt = "0.4.0"
+
+[build-dependencies]
+wattbuild = { git = "https://github.com/qryxip/wattbuild" }
+
+[dev-dependencies]
+trybuild = { version = "1.0.41", features = ["diff"] }
+proconio = { version = "=0.3.6", features = ["derive"] }

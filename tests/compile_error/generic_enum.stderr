@@ -1,0 +1,5 @@
+error: generic enum not supported.
+ --> $DIR/generic_enum.rs:4:11
+  |
+4 | enum Query<T> {
+  |           ^^^
