@@ -1,6 +1,6 @@
 # proconio_enum_query
 
-[proconio](https://crates.io/crates/proconio)で列挙型を受け取れるようにするattributeを追加するクレートです
+[proconio](https://crates.io/crates/proconio)で列挙型を受け取れるようにするattributeを追加するクレートです。
 
 現在、**ジェネリック列挙型**や**Vecの入力**には**対応してない**ので注意です
 
@@ -22,19 +22,24 @@ proconio::input! {
 }
 ```
 
-[`cargo-equip`](https://github.com/qryxip/cargo-equip)による展開にも対応しています
+[`cargo-equip`](https://github.com/qryxip/cargo-equip)による展開にも対応しています。
 
 参考: [競技プログラミングにprocedural macroを持ち込む](https://qiita.com/qryxip/items/1b4716b1357c89adeaae)
 
 ## Description
 
-列挙型に`#[proconio_enum_query::proconio_enum_query]`を付与することで`proconio::source::Readable`が実装されます
+列挙型に`#[proconio_enum_query::proconio_enum_query]`を付与することで`proconio::source::Readable`が実装されます。
 
 `#[proconio_enum_query]`が付与された列挙型が`input!`で入力されるときは次の順で処理されます。
 
 1. クエリの種類を示す番号として入力の先頭の整数1つが処理される
-1. クエリ番号が列挙型のヴァリアントの宣言順に対応して、どのヴァリアントとして入力されるか決定される(**1-indexed**)
+1. クエリ番号が列挙型のヴァリアントの宣言順に対応して、どのヴァリアントとして入力されるか決定される(デフォルトでは**1-indexed**)
 1. 選択されたヴァリアントが入力処理される
+
+クエリ番号の開始インデックスを変更したい場合は`#[proconio_enum_query(start_index=0)]`の様に指定できます。
+指定できる範囲は`isize`の範囲です。
+
+クエリ番号に該当するヴァリアントが存在しない場合は`panic!`します。
 
 ヴァリアントの種類はユニット型、タプル型、構造体型に対応しています。
 
@@ -61,7 +66,7 @@ enum Query {
 
 (実際はもっと汚い感じに置換されるけどそこは目を瞑っていただきたいです)
 
-次のような先頭にクエリの種類を示す番号があり、その番号によって入力形式を切り替えるといった形式の時に便利...かもしれないです
+次のような先頭にクエリの種類を示す番号があり、その番号によって入力形式を切り替えるといった形式の時に便利...かもしれないです。
 
 ### stdin
 
@@ -106,20 +111,20 @@ input! {
 }
 ```
 
-## TODO
-
-- 0-indexedなクエリ番号への対応及びクエリ番号の指定
-- ジェネリック列挙型の対応
-- Vecを含むクエリ
-
 ## Requirement
 
 - Python3.9
   - ビルドスクリプト内部で呼び出しています
 
+## TODO
+
+- ヴァリアントごとのクエリ番号の指定
+- ジェネリック列挙型の対応
+- Vecを含むクエリ
+
 ## Note
 
-`cargo-equip`による展開に対応するためのソースコードは<https://github.com/qryxip/competitive-programming-library>の`proc-macros/fastout`の当該部分を一部改変したものを使用しています
+`cargo-equip`による展開に対応するためのソースコードは<https://github.com/qryxip/competitive-programming-library>の`proc-macros/fastout`の当該部分を一部改変したものを使用しています。
 
 ## Author
 

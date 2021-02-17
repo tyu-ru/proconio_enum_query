@@ -1,0 +1,31 @@
+error: expected `=`
+ --> $DIR/incollect_arg.rs:1:1
+  |
+1 | #[proconio_enum_query::proconio_enum_query(hoge)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: expected `=`
+ --> $DIR/incollect_arg.rs:6:48
+  |
+6 | #[proconio_enum_query::proconio_enum_query(fuga(piyo))]
+  |                                                ^^^^^^
+
+error: unknown args
+  --> $DIR/incollect_arg.rs:11:44
+   |
+11 | #[proconio_enum_query::proconio_enum_query(foo = 10)]
+   |                                            ^^^
+
+error: expected literal
+  --> $DIR/incollect_arg.rs:16:58
+   |
+16 | #[proconio_enum_query::proconio_enum_query(start_index = abc)]
+   |                                                          ^^^
+
+error: must be isize literal
+  --> $DIR/incollect_arg.rs:21:58
+   |
+21 | #[proconio_enum_query::proconio_enum_query(start_index = "abc")]
+   |                                                          ^^^^^
