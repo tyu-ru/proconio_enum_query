@@ -1,5 +1,7 @@
 # proconio_enum_query
 
+![Rust](https://github.com/tyu-ru/proconio_enum_query/workflows/Rust/badge.svg)
+
 [proconio](https://crates.io/crates/proconio)で列挙型を受け取れるようにするattributeを追加するクレートです。
 
 現在、**ジェネリック列挙型**や**Vecの入力**には**対応してない**ので注意です
