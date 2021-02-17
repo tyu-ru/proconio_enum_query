@@ -32,7 +32,7 @@ proconio::input! {
 
 `#[proconio_enum_query]`が付与された列挙型が`input!`で入力されるときは次の順で処理されます。
 
-1. クエリの種類を示す番号として入力の先頭の整数1つが処理される
+1. クエリの種類を示す番号として入力の先頭の整数1つが`isize`型として入力処理される
 1. クエリ番号が列挙型のヴァリアントの宣言順に対応して、どのヴァリアントとして入力されるか決定される(デフォルトでは**1-indexed**)
 1. 選択されたヴァリアントが入力処理される
 
@@ -110,6 +110,11 @@ input! {
     query: [Query; q],
 }
 ```
+
+この様な入力形式をもつ問題
+
+- [ABC189-E](https://atcoder.jp/contests/abc189/tasks/abc189_e)
+- [ABC157-E](https://atcoder.jp/contests/abc157/tasks/abc157_e)
 
 ## Requirement
 
