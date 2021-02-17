@@ -120,6 +120,11 @@ input! {
 
 ## Requirement
 
+- Rust
+  - toolchain 1.42.0-x86_64-unknown-linux-gnu
+    - AtCoderのジャッジサーバと同じ環境です
+  - target wasm32-unknown-unknown
+    - ビルドスクリプト内部で呼び出しています
 - Python3.9
   - ビルドスクリプト内部で呼び出しています
 
