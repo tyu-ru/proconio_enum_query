@@ -118,15 +118,11 @@ input! {
 - [ABC189-E](https://atcoder.jp/contests/abc189/tasks/abc189_e)
 - [ABC157-E](https://atcoder.jp/contests/abc157/tasks/abc157_e)
 
-## Requirement
+# ChangeLog
 
-- Rust
-  - toolchain 1.42.0-x86_64-unknown-linux-gnu
-    - AtCoderのジャッジサーバと同じ環境です
-  - target wasm32-unknown-unknown
-    - ビルドスクリプト内部で呼び出しています
-- Python3.9
-  - ビルドスクリプト内部で呼び出しています
+- v0.1.1
+  - `cargo-equip`が`watt`を要求しなくなったのでそれに追従
+    - これによってPythonなどの要求が消えた
 
 ## TODO
 
