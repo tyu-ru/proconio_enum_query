@@ -120,6 +120,8 @@ input! {
 
 # ChangeLog
 
+- v0.1.2
+  - 'cargo-equip'でのバンドル時にpanic!する問題を修正
 - v0.1.1
   - `cargo-equip`が`watt`を要求しなくなったのでそれに追従
     - これによってPythonなどの要求が消えた
