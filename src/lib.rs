@@ -66,6 +66,7 @@ fn run(args: TokenStream, input: TokenStream) -> syn::Result<TokenStream> {
     let start_index = start_index(args)?;
 
     let arms = arms(enum_ident, &item.variants, start_index);
+
     let gen = quote! {
         #output_enum
 
@@ -137,7 +138,7 @@ fn arms(
             Fields::Named(named) => strct_field_input(enum_ident, variant_ident, named),
             Fields::Unit => quote! { #enum_ident::#variant_ident },
         };
-        let lit_i = Literal::isize_suffixed(*i);
+        let lit_i = Literal::isize_unsuffixed(*i);
         *i += 1;
         Some(quote! { #lit_i => { #stmt }})
     });
