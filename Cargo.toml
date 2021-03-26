@@ -8,14 +8,14 @@ license = "CC0-1.0"
 publish = false
 
 [lib]
-name = "proconio_enum_query"
+#name = "proconio_enum_query"
 proc-macro = true
 
 [dependencies]
-syn = { version = "1.0.60", features = ["full", "extra-traits"] }
+syn = { version = "1.0.64", features = ["full", "extra-traits"] }
 quote = "1.0.9"
 proc-macro2 = "1.0.24"
 
 [dev-dependencies]
 trybuild = { version = "1.0.41", features = ["diff"] }
-proconio = { version = "=0.3.6", features = ["derive"] }
+proconio = { version = "0.3.6", features = ["derive"] }
