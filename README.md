@@ -120,8 +120,11 @@ input! {
 
 # ChangeLog
 
+- v0.1.3
+  - `quote`クレートのバージョンを1.0.0にダウングレード
+    - なぜか読み込めなくなったため（`num-derive`と衝突してる？よくわかんない） 
 - v0.1.2
-  - 'cargo-equip'でのバンドル時にpanic!する問題を修正
+  - `cargo-equip`でのバンドル時にpanic!する問題を修正
 - v0.1.1
   - `cargo-equip`が`watt`を要求しなくなったのでそれに追従
     - これによってPythonなどの要求が消えた
